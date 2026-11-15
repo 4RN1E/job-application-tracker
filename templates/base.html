@@ -4,13 +4,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Job Tracker{% endblock %} · Job Tracker</title>
+  <link rel="preload" href="{{ url_for('static', filename='fonts/cormorant-garamond-latin-600-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ url_for('static', filename='fonts/inter-latin-wght-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   {% set section = request.endpoint.split('_')[0] if request.endpoint else '' %}
   <header class="topbar">
     <div class="container topbar-inner">
-      <a class="brand" href="{{ url_for('dashboard') }}">Job Tracker</a>
+      <a class="brand" href="{{ url_for('dashboard') }}">
+        <span class="brand-mark">Circuit Culture</span>
+        <span class="brand-sub">Job Tracker</span>
+      </a>
       <nav>
         <a href="{{ url_for('dashboard') }}"    class="{{ 'active' if section == 'dashboard' }}">Dashboard</a>
         <a href="{{ url_for('companies') }}"    class="{{ 'active' if section == 'companies' or section == 'company' }}">Companies</a>
@@ -31,6 +36,6 @@
     {% block content %}{% endblock %}
   </main>
 
-  <footer class="container footer">Job Application Tracker · Flask + MySQL</footer>
+  <footer class="container footer">Circuit Culture · Job Application Tracker</footer>
 </body>
 </html>
