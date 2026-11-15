@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% from "_macros.html" import actions %}
+{% block title %}Contacts{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Contacts</h1>
+  <a class="btn btn-primary" href="{{ url_for('contact_new') }}">+ Add contact</a>
+</div>
+
+{% if contacts %}
+<div class="card table-wrap">
+  <table>
+    <thead><tr><th>Name</th><th>Company</th><th>Title</th><th>Email</th><th>Phone</th><th></th></tr></thead>
+    <tbody>
+    {% for t in contacts %}
+      <tr>
+        <td><a href="{{ url_for('contact_detail', contact_id=t.contact_id) }}">{{ t.contact_name }}</a></td>
+        <td><a href="{{ url_for('company_detail', company_id=t.company_id) }}">{{ t.company_name }}</a></td>
+        <td>{{ t.title or '—' }}</td>
+        <td>{% if t.email %}<a href="mailto:{{ t.email }}">{{ t.email }}</a>{% else %}—{% endif %}</td>
+        <td class="nowrap">{{ t.phone or '—' }}</td>
+        <td class="right">{{ actions(url_for('contact_edit', contact_id=t.contact_id), url_for('contact_delete', contact_id=t.contact_id)) }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="card empty">
+  <p>No contacts yet. Contacts belong to a company, so add the company first if needed.</p>
+  <a class="btn btn-primary" href="{{ url_for('contact_new') }}">+ Add contact</a>
+</div>
+{% endif %}
+{% endblock %}

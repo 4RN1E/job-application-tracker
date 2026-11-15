@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% from "_macros.html" import text_field, select_field, error_list %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="page-head"><h1>{{ title }}</h1></div>
+{{ error_list(errors) }}
+{% if not companies %}
+  <div class="card empty">
+    <p>A job needs a company. Add one first.</p>
+    <a class="btn btn-primary" href="{{ url_for('company_new') }}">+ Add company</a>
+  </div>
+{% else %}
+<form method="post" class="card form" novalidate>
+  {{ select_field('company_id', 'Company', values, companies|map(attribute='company_id')|zip(companies|map(attribute='company_name'))|list, required=true, blank='Choose a company…') }}
+  {{ text_field('job_title', 'Job title', values, required=true, maxlength=100) }}
+  <div class="field-row">
+    {{ select_field('job_type', 'Job type', values, JOB_TYPES|zip(JOB_TYPES)|list, required=true) }}
+    {{ text_field('date_posted', 'Date posted', values, type='date') }}
+  </div>
+  <div class="field-row">
+    {{ text_field('salary_min', 'Minimum salary', values, type='number', help='Whole number, e.g. 75000 (or an hourly rate for internships).') }}
+    {{ text_field('salary_max', 'Maximum salary', values, type='number') }}
+  </div>
+  {{ text_field('job_url', 'Job posting URL', values, maxlength=300, placeholder='https://…') }}
+  {{ text_field('requirements', 'Required skills', values, placeholder='Python, SQL, Flask', help='Separate skills with commas. The Job Match page uses these.') }}
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit">Save</button>
+    <a class="btn" href="{{ cancel_url }}">Cancel</a>
+  </div>
+</form>
+{% endif %}
+{% endblock %}

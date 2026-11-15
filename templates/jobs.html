@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% from "_macros.html" import actions, chips %}
+{% block title %}Jobs{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Jobs</h1>
+  <a class="btn btn-primary" href="{{ url_for('job_new') }}">+ Add job</a>
+</div>
+
+{% if jobs %}
+<div class="card table-wrap">
+  <table>
+    <thead><tr><th>Job</th><th>Company</th><th>Type</th><th>Salary</th><th>Skills wanted</th><th>Apps</th><th></th></tr></thead>
+    <tbody>
+    {% for j in jobs %}
+      <tr>
+        <td><a href="{{ url_for('job_detail', job_id=j.job_id) }}">{{ j.job_title }}</a></td>
+        <td>{{ j.company_name }}</td>
+        <td>{{ j.job_type }}</td>
+        <td class="nowrap">{{ j|salary }}</td>
+        <td>{{ chips(j.requirements) }}</td>
+        <td>{{ j.application_count }}</td>
+        <td class="right">{{ actions(url_for('job_edit', job_id=j.job_id), url_for('job_delete', job_id=j.job_id)) }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="card empty">
+  <p>No jobs yet. Jobs belong to a company, so <a href="{{ url_for('companies') }}">add a company</a> first if you haven't.</p>
+  <a class="btn btn-primary" href="{{ url_for('job_new') }}">+ Add job</a>
+</div>
+{% endif %}
+{% endblock %}

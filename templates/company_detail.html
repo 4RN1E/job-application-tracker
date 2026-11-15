@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% from "_macros.html" import actions %}
+{% block title %}{{ company.company_name }}{% endblock %}
+{% block content %}
+<p class="crumb"><a href="{{ url_for('companies') }}">← Companies</a></p>
+<div class="page-head">
+  <h1>{{ company.company_name }}</h1>
+  {{ actions(url_for('company_edit', company_id=company.company_id), url_for('company_delete', company_id=company.company_id)) }}
+</div>
+
+<section class="card">
+  <dl class="details">
+    <dt>Industry</dt><dd>{{ company.industry or '—' }}</dd>
+    <dt>Website</dt><dd>{% if company.website %}<a href="{{ company.website }}" target="_blank" rel="noopener">{{ company.website }}</a>{% else %}—{% endif %}</dd>
+    <dt>Location</dt><dd>{{ [company.city, company.state]|select|join(', ') or '—' }}</dd>
+    <dt>Notes</dt><dd class="prewrap">{{ company.notes or '—' }}</dd>
+  </dl>
+</section>
+
+<section class="card">
+  <div class="card-head"><h2>Jobs</h2>
+    <a class="btn btn-small" href="{{ url_for('job_new', company_id=company.company_id) }}">+ Add job</a></div>
+  {% if jobs %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>Title</th><th>Type</th><th>Salary</th><th>Posted</th><th>Applications</th></tr></thead>
+    <tbody>
+    {% for j in jobs %}
+      <tr>
+        <td><a href="{{ url_for('job_detail', job_id=j.job_id) }}">{{ j.job_title }}</a></td>
+        <td>{{ j.job_type }}</td><td>{{ j|salary }}</td><td>{{ j.date_posted|nice_date }}</td><td>{{ j.application_count }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  {% else %}<p class="muted">No jobs saved for this company yet.</p>{% endif %}
+</section>
+
+<section class="card">
+  <div class="card-head"><h2>Contacts</h2>
+    <a class="btn btn-small" href="{{ url_for('contact_new', company_id=company.company_id) }}">+ Add contact</a></div>
+  {% if contacts %}
+  <ul class="plain-list">
+    {% for t in contacts %}
+    <li><a href="{{ url_for('contact_detail', contact_id=t.contact_id) }}"><strong>{{ t.contact_name }}</strong></a>
+      {% if t.title %}<span class="muted"> · {{ t.title }}</span>{% endif %}</li>
+    {% endfor %}
+  </ul>
+  {% else %}<p class="muted">No contacts saved for this company yet.</p>{% endif %}
+</section>
+{% endblock %}

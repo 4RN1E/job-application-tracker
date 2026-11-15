@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% from "_macros.html" import actions %}
+{% block title %}Companies{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Companies</h1>
+  <a class="btn btn-primary" href="{{ url_for('company_new') }}">+ Add company</a>
+</div>
+
+{% if companies %}
+<div class="card table-wrap">
+  <table>
+    <thead><tr><th>Company</th><th>Industry</th><th>Location</th><th>Jobs</th><th>Contacts</th><th></th></tr></thead>
+    <tbody>
+    {% for c in companies %}
+      <tr>
+        <td><a href="{{ url_for('company_detail', company_id=c.company_id) }}">{{ c.company_name }}</a></td>
+        <td>{{ c.industry or '—' }}</td>
+        <td>{{ [c.city, c.state]|select|join(', ') or '—' }}</td>
+        <td>{{ c.job_count }}</td>
+        <td>{{ c.contact_count }}</td>
+        <td class="right">{{ actions(url_for('company_edit', company_id=c.company_id), url_for('company_delete', company_id=c.company_id)) }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="card empty">
+  <p>No companies yet. Add the first employer you're interested in.</p>
+  <a class="btn btn-primary" href="{{ url_for('company_new') }}">+ Add company</a>
+</div>
+{% endif %}
+{% endblock %}

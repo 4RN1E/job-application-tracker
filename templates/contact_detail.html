@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% from "_macros.html" import actions %}
+{% block title %}{{ contact.contact_name }}{% endblock %}
+{% block content %}
+<p class="crumb"><a href="{{ url_for('contacts') }}">← Contacts</a></p>
+<div class="page-head">
+  <h1>{{ contact.contact_name }}</h1>
+  {{ actions(url_for('contact_edit', contact_id=contact.contact_id), url_for('contact_delete', contact_id=contact.contact_id)) }}
+</div>
+
+<section class="card">
+  <dl class="details">
+    <dt>Company</dt><dd><a href="{{ url_for('company_detail', company_id=contact.company_id) }}">{{ contact.company_name }}</a></dd>
+    <dt>Title</dt><dd>{{ contact.title or '—' }}</dd>
+    <dt>Email</dt><dd>{% if contact.email %}<a href="mailto:{{ contact.email }}">{{ contact.email }}</a>{% else %}—{% endif %}</dd>
+    <dt>Phone</dt><dd>{{ contact.phone or '—' }}</dd>
+    <dt>LinkedIn</dt><dd>{% if contact.linkedin_url %}<a href="{{ contact.linkedin_url }}" target="_blank" rel="noopener">{{ contact.linkedin_url }}</a>{% else %}—{% endif %}</dd>
+    <dt>Notes</dt><dd class="prewrap">{{ contact.notes or '—' }}</dd>
+  </dl>
+</section>
+{% endblock %}

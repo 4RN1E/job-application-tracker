@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% from "_macros.html" import actions, status_badge %}
+{% block title %}Application{% endblock %}
+{% block content %}
+<p class="crumb"><a href="{{ url_for('applications') }}">← Applications</a></p>
+<div class="page-head">
+  <h1>{{ application.job_title }} <span class="muted">at {{ application.company_name }}</span></h1>
+  {{ actions(url_for('application_edit', application_id=application.application_id), url_for('application_delete', application_id=application.application_id)) }}
+</div>
+
+<section class="card">
+  <dl class="details">
+    <dt>Job</dt><dd><a href="{{ url_for('job_detail', job_id=application.job_id) }}">{{ application.job_title }}</a>
+      · <a href="{{ url_for('company_detail', company_id=application.company_id) }}">{{ application.company_name }}</a></dd>
+    <dt>Status</dt><dd>{{ status_badge(application.status) }}</dd>
+    <dt>Applied</dt><dd>{{ application.application_date|nice_date }}</dd>
+    <dt>Resume version</dt><dd>{{ application.resume_version or '—' }}</dd>
+    <dt>Cover letter</dt><dd>{{ 'Sent' if application.cover_letter_sent else 'Not sent' }}</dd>
+  </dl>
+</section>
+
+<section class="card">
+  <h2>Interview</h2>
+  {% if interview %}
+  <dl class="details">
+    <dt>Date</dt><dd>{{ interview.date|nice_date }}</dd>
+    <dt>Type</dt><dd>{{ interview.type or '—' }}</dd>
+    <dt>Interviewer</dt><dd>{{ interview.interviewer or '—' }}</dd>
+    <dt>Notes</dt><dd class="prewrap">{{ interview.notes or '—' }}</dd>
+  </dl>
+  {% else %}
+  <p class="muted">No interview details yet. <a href="{{ url_for('application_edit', application_id=application.application_id) }}">Add some</a> when one is scheduled.</p>
+  {% endif %}
+</section>
+{% endblock %}

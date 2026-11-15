@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Job Match{% endblock %}
+{% block content %}
+<div class="page-head"><h1>Job Match</h1></div>
+
+<form method="get" class="card form">
+  <div class="field">
+    <label for="skills">Your skills</label>
+    <input type="text" id="skills" name="skills" value="{{ skills_text }}" placeholder="Python, SQL, Flask" autofocus>
+    <small>Separate skills with commas. Matching ignores upper/lower case.</small>
+  </div>
+  <div class="form-actions"><button class="btn btn-primary" type="submit">Find matching jobs</button></div>
+</form>
+
+{% if skills %}
+  <p class="muted">Matching against: {% for s in skills %}<span class="chip chip-have">{{ s }}</span>{% endfor %}</p>
+
+  {% if ranked %}
+  <section class="card">
+    <h2>Matching jobs</h2>
+    <ol class="match-list">
+    {% for j in ranked %}
+      <li class="match {{ 'match-zero' if j.match.percent == 0 }}">
+        <div class="match-top">
+          <div>
+            <a href="{{ url_for('job_detail', job_id=j.job_id) }}"><strong>{{ j.job_title }}</strong></a> at {{ j.company_name }}
+            <span class="muted"> · {{ j.job_type }}</span>
+          </div>
+          <div class="match-score">{{ j.match.percent }}% <span class="muted">({{ j.match.matched_count }}/{{ j.match.total }} skills)</span></div>
+        </div>
+        <div class="meter"><div class="meter-fill {{ 'meter-high' if j.match.percent >= 75 else 'meter-mid' if j.match.percent >= 40 else 'meter-low' }}" style="width: {{ j.match.percent }}%"></div></div>
+        {% if j.match.matched %}<div class="match-line">Have: {% for s in j.match.matched %}<span class="chip chip-have">{{ s }}</span>{% endfor %}</div>{% endif %}
+        {% if j.match.missing %}<div class="match-line">Missing: {% for s in j.match.missing %}<span class="chip chip-missing">{{ s }}</span>{% endfor %}</div>{% endif %}
+      </li>
+    {% endfor %}
+    </ol>
+  </section>
+
+  {% if top_missing %}
+  <section class="card">
+    <h2>Skills worth learning</h2>
+    <p class="muted">Skills you listed no match for, ranked by how many saved jobs ask for them.</p>
+    <ul class="plain-list">
+      {% for skill, n in top_missing %}<li><strong>{{ skill }}</strong> <span class="muted">· wanted by {{ n }} job{{ '' if n == 1 else 's' }}</span></li>{% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+  {% else %}
+  <div class="card empty"><p>None of your saved jobs list required skills yet. Add them in each job's <em>Required skills</em> field.</p></div>
+  {% endif %}
+
+  {% if unscored %}
+  <p class="muted">{{ unscored|length }} job{{ '' if unscored|length == 1 else 's' }} can't be scored because no required skills are listed:
+    {% for j in unscored %}<a href="{{ url_for('job_edit', job_id=j.job_id) }}">{{ j.job_title }}</a>{{ ', ' if not loop.last }}{% endfor %}.</p>
+  {% endif %}
+{% endif %}
+{% endblock %}

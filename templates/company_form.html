@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% from "_macros.html" import text_field, textarea_field, error_list %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="page-head"><h1>{{ title }}</h1></div>
+{{ error_list(errors) }}
+<form method="post" class="card form" novalidate>
+  {{ text_field('company_name', 'Company name', values, required=true, maxlength=100) }}
+  <div class="field-row">
+    {{ text_field('industry', 'Industry', values, maxlength=50, placeholder='e.g. Software') }}
+    {{ text_field('website', 'Website', values, maxlength=200, placeholder='https://…') }}
+  </div>
+  <div class="field-row">
+    {{ text_field('city', 'City', values, maxlength=50) }}
+    {{ text_field('state', 'State', values, maxlength=50) }}
+  </div>
+  {{ textarea_field('notes', 'Notes', values, rows=4) }}
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit">Save</button>
+    <a class="btn" href="{{ cancel_url }}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

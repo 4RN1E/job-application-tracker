@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% from "_macros.html" import text_field, textarea_field, select_field, error_list %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="page-head"><h1>{{ title }}</h1></div>
+{{ error_list(errors) }}
+{% if not companies %}
+  <div class="card empty">
+    <p>A contact needs a company. Add one first.</p>
+    <a class="btn btn-primary" href="{{ url_for('company_new') }}">+ Add company</a>
+  </div>
+{% else %}
+<form method="post" class="card form" novalidate>
+  {{ select_field('company_id', 'Company', values, companies|map(attribute='company_id')|zip(companies|map(attribute='company_name'))|list, required=true, blank='Choose a company…') }}
+  <div class="field-row">
+    {{ text_field('contact_name', 'Name', values, required=true, maxlength=100) }}
+    {{ text_field('title', 'Title', values, maxlength=100, placeholder='e.g. Technical Recruiter') }}
+  </div>
+  <div class="field-row">
+    {{ text_field('email', 'Email', values, type='email', maxlength=100) }}
+    {{ text_field('phone', 'Phone', values, maxlength=20) }}
+  </div>
+  {{ text_field('linkedin_url', 'LinkedIn URL', values, maxlength=200, placeholder='https://www.linkedin.com/in/…') }}
+  {{ textarea_field('notes', 'Notes', values, rows=4) }}
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit">Save</button>
+    <a class="btn" href="{{ cancel_url }}">Cancel</a>
+  </div>
+</form>
+{% endif %}
+{% endblock %}

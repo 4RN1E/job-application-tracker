@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status_badge %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Dashboard</h1>
+  <a class="btn btn-primary" href="{{ url_for('application_new') }}">+ Log application</a>
+</div>
+
+<section class="stat-grid">
+  <div class="stat"><span class="stat-num">{{ totals.applications }}</span><span class="stat-label">Applications</span></div>
+  <div class="stat"><span class="stat-num">{{ active }}</span><span class="stat-label">Still active</span></div>
+  <div class="stat"><span class="stat-num">{{ offers }}</span><span class="stat-label">Offers</span></div>
+  <div class="stat"><span class="stat-num">{{ response_rate }}%</span><span class="stat-label">Response rate</span></div>
+</section>
+
+<div class="two-col">
+  <section class="card">
+    <h2>Applications by status</h2>
+    {% if totals.applications %}
+      {% for row in by_status %}
+      <a class="bar-row" href="{{ url_for('applications', status=row.status) }}">
+        <span class="bar-label">{{ row.status }}</span>
+        <span class="bar-track"><span class="bar-fill bar-{{ row.status|lower }}" style="width: {{ row.pct }}%"></span></span>
+        <span class="bar-count">{{ row.count }}</span>
+      </a>
+      {% endfor %}
+    {% else %}
+      <p class="muted">No applications yet. <a href="{{ url_for('application_new') }}">Log your first one.</a></p>
+    {% endif %}
+  </section>
+
+  <section class="card">
+    <h2>Upcoming interviews</h2>
+    {% if upcoming %}
+      <ul class="plain-list">
+      {% for u in upcoming %}
+        <li>
+          <a href="{{ url_for('application_detail', application_id=u.application_id) }}">
+            <strong>{{ u.job_title }}</strong> at {{ u.company_name }}</a>
+          <div class="muted">{{ u.interview.date|nice_date }}{% if u.interview.type %} · {{ u.interview.type }}{% endif %}{% if u.interview.interviewer %} · with {{ u.interview.interviewer }}{% endif %}</div>
+        </li>
+      {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">Nothing scheduled. Add interview details when you edit an application.</p>
+    {% endif %}
+  </section>
+</div>
+
+<section class="card">
+  <h2>Recent applications</h2>
+  {% if recent %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Job</th><th>Company</th><th>Applied</th><th>Status</th></tr></thead>
+      <tbody>
+      {% for a in recent %}
+        <tr>
+          <td><a href="{{ url_for('application_detail', application_id=a.application_id) }}">{{ a.job_title }}</a></td>
+          <td>{{ a.company_name }}</td>
+          <td>{{ a.application_date|nice_date }}</td>
+          <td>{{ status_badge(a.status) }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <p class="muted">Nothing here yet.</p>
+  {% endif %}
+</section>
+
+<section class="count-row">
+  <a href="{{ url_for('companies') }}"><strong>{{ totals.companies }}</strong> companies</a>
+  <a href="{{ url_for('jobs') }}"><strong>{{ totals.jobs }}</strong> jobs</a>
+  <a href="{{ url_for('contacts') }}"><strong>{{ totals.contacts }}</strong> contacts</a>
+</section>
+{% endblock %}

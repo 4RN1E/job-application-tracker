@@ -1,0 +1,67 @@
+{# Reusable form fields and small display pieces. `values` is a dict of current values. #}
+
+{% macro val(values, name) %}{{ '' if values.get(name) is none else values.get(name) }}{% endmacro %}
+
+{% macro text_field(name, label, values, required=false, type='text', maxlength=none, placeholder='', help='') %}
+<div class="field">
+  <label for="{{ name }}">{{ label }}{% if required %} <span class="req">*</span>{% endif %}</label>
+  <input type="{{ type }}" id="{{ name }}" name="{{ name }}" value="{{ val(values, name) }}"
+         {% if maxlength %}maxlength="{{ maxlength }}"{% endif %}
+         {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+         {% if required %}required{% endif %}
+         {% if type == 'number' %}min="0"{% endif %}>
+  {% if help %}<small>{{ help }}</small>{% endif %}
+</div>
+{% endmacro %}
+
+{% macro textarea_field(name, label, values, rows=3, help='') %}
+<div class="field">
+  <label for="{{ name }}">{{ label }}</label>
+  <textarea id="{{ name }}" name="{{ name }}" rows="{{ rows }}">{{ val(values, name) }}</textarea>
+  {% if help %}<small>{{ help }}</small>{% endif %}
+</div>
+{% endmacro %}
+
+{# options: list of (value, label) pairs #}
+{% macro select_field(name, label, values, options, required=false, blank='') %}
+<div class="field">
+  <label for="{{ name }}">{{ label }}{% if required %} <span class="req">*</span>{% endif %}</label>
+  <select id="{{ name }}" name="{{ name }}" {% if required %}required{% endif %}>
+    {% if blank %}<option value="">{{ blank }}</option>{% endif %}
+    {% for value, text in options %}
+      <option value="{{ value }}" {{ 'selected' if values.get(name)|string == value|string }}>{{ text }}</option>
+    {% endfor %}
+  </select>
+</div>
+{% endmacro %}
+
+{% macro checkbox_field(name, label, values) %}
+<div class="field field-check">
+  <label><input type="checkbox" name="{{ name }}" {{ 'checked' if values.get(name) in (true, 1, 'on', '1') }}> {{ label }}</label>
+</div>
+{% endmacro %}
+
+{% macro error_list(errors) %}
+{% if errors %}
+<div class="flash flash-error">
+  <strong>Please fix the following:</strong>
+  <ul>{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul>
+</div>
+{% endif %}
+{% endmacro %}
+
+{% macro status_badge(status) %}
+<span class="badge badge-{{ status|lower }}">{{ status }}</span>
+{% endmacro %}
+
+{% macro chips(items) %}
+{% for item in items %}<span class="chip">{{ item }}</span>{% endfor %}
+{% endmacro %}
+
+{# Row of Edit / Delete links. `name` is the route prefix, e.g. 'company'; `key` the id arg name #}
+{% macro actions(edit_url, delete_url) %}
+<span class="actions">
+  <a class="btn btn-small" href="{{ edit_url }}">Edit</a>
+  <a class="btn btn-small btn-danger-outline" href="{{ delete_url }}">Delete</a>
+</span>
+{% endmacro %}

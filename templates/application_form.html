@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% from "_macros.html" import text_field, textarea_field, select_field, checkbox_field, error_list %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="page-head"><h1>{{ title }}</h1></div>
+{{ error_list(errors) }}
+{% if not jobs %}
+  <div class="card empty">
+    <p>An application needs a job. Add one first.</p>
+    <a class="btn btn-primary" href="{{ url_for('job_new') }}">+ Add job</a>
+  </div>
+{% else %}
+<form method="post" class="card form" novalidate>
+  {% set job_options = [] %}
+  {% for j in jobs %}{% set _ = job_options.append((j.job_id, j.company_name ~ ' — ' ~ j.job_title)) %}{% endfor %}
+  {{ select_field('job_id', 'Job', values, job_options, required=true, blank='Choose a job…') }}
+  <div class="field-row">
+    {{ text_field('application_date', 'Application date', values, required=true, type='date') }}
+    {{ select_field('status', 'Status', values, STATUSES|zip(STATUSES)|list, required=true) }}
+  </div>
+  <div class="field-row">
+    {{ text_field('resume_version', 'Resume version', values, maxlength=50, placeholder='e.g. v3-software') }}
+    {{ checkbox_field('cover_letter_sent', 'Cover letter sent', values) }}
+  </div>
+
+  <fieldset>
+    <legend>Interview details <span class="muted">(optional)</span></legend>
+    <div class="field-row">
+      {{ text_field('interview_date', 'Interview date', values, type='date') }}
+      {{ select_field('interview_type', 'Type', values, INTERVIEW_TYPES|zip(INTERVIEW_TYPES)|list, blank='—') }}
+    </div>
+    {{ text_field('interviewer', 'Interviewer', values, maxlength=100) }}
+    {{ textarea_field('interview_notes', 'Notes', values, rows=3) }}
+  </fieldset>
+
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit">Save</button>
+    <a class="btn" href="{{ cancel_url }}">Cancel</a>
+  </div>
+</form>
+{% endif %}
+{% endblock %}

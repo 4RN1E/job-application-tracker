@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Delete {{ kind }}{% endblock %}
+{% block content %}
+<div class="page-head"><h1>Delete this {{ kind }}?</h1></div>
+<form method="post" class="card form confirm">
+  <p>You are about to permanently delete <strong>{{ label }}</strong>.</p>
+  {% set affected = cascade.items()|selectattr(1)|list %}
+  {% if affected %}
+  <div class="flash flash-warning">
+    This will also delete:
+    <ul>{% for name, n in affected %}<li>{{ n }} {{ name }}</li>{% endfor %}</ul>
+  </div>
+  {% endif %}
+  <p class="muted">This cannot be undone.</p>
+  <div class="form-actions">
+    <button class="btn btn-danger" type="submit">Yes, delete</button>
+    <a class="btn" href="{{ cancel_url }}">Cancel</a>
+  </div>
+</form>
+{% endblock %}
