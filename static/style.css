@@ -176,7 +176,8 @@ tbody tr:hover { background: var(--gray-100); }
 .badge-applied   { background: var(--white); color: var(--black); }
 .badge-screening { background: var(--gray-200); border-color: var(--gray-200); color: var(--black); }
 .badge-interview { background: var(--black); color: var(--white); }
-.badge-offer     { background: var(--red); border-color: var(--red); color: var(--white); }
+.badge-offer     { background: var(--white); border-color: var(--red); color: var(--red); }
+.badge-accepted  { background: var(--red); border-color: var(--red); color: var(--white); }
 .badge-rejected  { background: var(--white); border-color: var(--gray-300); color: var(--gray-500); text-decoration: line-through; }
 .badge-withdrawn { background: var(--white); border: 1px dashed var(--gray-300); color: var(--gray-500); }
 
@@ -252,7 +253,8 @@ legend { padding: 0 var(--s1); font-size: 0.68rem; font-weight: 600; letter-spac
 .bar-applied   { background: var(--gray-300); }
 .bar-screening { background: var(--gray-500); }
 .bar-interview { background: var(--black); }
-.bar-offer     { background: var(--red); }
+.bar-offer     { background: rgba(225, 6, 0, 0.45); }
+.bar-accepted  { background: var(--red); }
 .bar-rejected  { background: var(--gray-200); }
 .bar-withdrawn { background: var(--gray-200); }
 .bar-count { text-align: right; font-weight: 600; }

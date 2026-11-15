@@ -63,7 +63,7 @@ CREATE TABLE applications (
     application_id    INT         PRIMARY KEY AUTO_INCREMENT,
     job_id            INT         NOT NULL,
     application_date  DATE        NOT NULL,
-    status            ENUM('Applied','Screening','Interview','Offer','Rejected','Withdrawn')
+    status            ENUM('Applied','Screening','Interview','Offer','Accepted','Rejected','Withdrawn')
                                   NOT NULL DEFAULT 'Applied',
     resume_version    VARCHAR(50),
     cover_letter_sent BOOLEAN     NOT NULL DEFAULT FALSE,

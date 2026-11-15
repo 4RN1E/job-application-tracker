@@ -19,7 +19,7 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-only-change-me")
 
 JOB_TYPES = ["Full-time", "Part-time", "Contract", "Internship"]
-STATUSES = ["Applied", "Screening", "Interview", "Offer", "Rejected", "Withdrawn"]
+STATUSES = ["Applied", "Screening", "Interview", "Offer", "Accepted", "Rejected", "Withdrawn"]
 INTERVIEW_TYPES = ["Phone screen", "Video call", "Technical", "On-site", "Behavioral", "Other"]
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
@@ -171,7 +171,7 @@ def dashboard():
     active = sum(counts.get(s, 0) for s in ("Applied", "Screening", "Interview"))
     # Share of applications that got any human response (everything past Applied,
     # excluding ones you withdrew yourself)
-    responded = sum(counts.get(s, 0) for s in ("Screening", "Interview", "Offer", "Rejected"))
+    responded = sum(counts.get(s, 0) for s in ("Screening", "Interview", "Offer", "Accepted", "Rejected"))
     countable = total_apps - counts.get("Withdrawn", 0)
     response_rate = round(100 * responded / countable) if countable else 0
 
@@ -204,7 +204,8 @@ def dashboard():
 
     return render_template(
         "dashboard.html", totals=totals, by_status=by_status, active=active,
-        offers=counts.get("Offer", 0), response_rate=response_rate,
+        offers=counts.get("Offer", 0) + counts.get("Accepted", 0),  # offers received
+        response_rate=response_rate,
         recent=recent, upcoming=upcoming[:5],
     )
 
