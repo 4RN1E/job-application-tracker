@@ -19,7 +19,7 @@ You need **Python 3.10+** and **MySQL 8.0.16+** (running locally).
 
 ```bash
 # 1. Get the code
-git clone <your-repo-url>
+git clone https://github.com/4RN1E/job-application-tracker.git
 cd job_tracker
 
 # 2. Create a virtual environment and install dependencies
@@ -32,10 +32,10 @@ cp .env.example .env               # Windows: copy .env.example .env
 #    then edit .env and set DB_USER / DB_PASSWORD for your MySQL
 
 # 4. Create the database and tables
-mysql -u root -p < schema.sql
+mysql -u root -p -e "source schema.sql"
 
 # 5. (Optional) load demo data
-mysql -u root -p job_tracker < seed.sql
+mysql -u root -p job_tracker -e "source seed.sql"
 
 # 6. Run the app
 python app.py
