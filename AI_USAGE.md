@@ -34,7 +34,7 @@
 ## How I Verified the AI's Work
 
 - Unit tests for the matching algorithm (`python -m unittest discover tests`).
-- Once I ran the application, I proceeded to test it thouroughly by creating, evaluating, updating, and deleting     data from the application. 
+- After running the application, I tested it thoroughly by creating, reading, updating, and deleting data from the application.
 
 ## Lessons Learned
 
